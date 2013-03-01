@@ -57,6 +57,8 @@ module Rack
         _data = {}
         # make sure the id exists
         @pool[session['session_id']] ||= {}
+        # remove data in @pool that has been removed from session
+        @pool[session['session_id']].delete_if { |k, v| !session.keys.include?(k) }
         # get the data to save for the cookie
         session.each do |k, v|
           if k == 'session_id' or k.match /padrino/
